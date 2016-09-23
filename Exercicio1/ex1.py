@@ -17,9 +17,6 @@ array = data.values
 X = array[:,0:165]
 Y = array[:,166]
 
-#Aplicando escala aos dados
-X = scale(X)
-
 #Aplicando o PCA com todas as 165 componentes
 pca = PCA(n_components=165)
 pca.fit(X)
@@ -32,9 +29,6 @@ print var
 #Selecionando o numero de componentes que mantem a variancia em 80% ----- Resposta da pergunta 1
 pca = PCA(n_components=12)
 X_transf = pca.fit_transform(X)
-
-print X.shape
-print X_transf.shape
 
 #Aplicando a regressao logistica aos dados de treino do conjunto de dados original
 model = LogisticRegression()
