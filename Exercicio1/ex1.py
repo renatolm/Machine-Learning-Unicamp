@@ -1,8 +1,6 @@
 import numpy as np 
 from sklearn.decomposition import PCA
 import pandas as pd 
-import matplotlib.pyplot as plt 
-from sklearn.preprocessing import scale
 from sklearn.linear_model import LogisticRegression
 from sklearn.lda import LDA
 from sklearn import metrics
@@ -17,8 +15,8 @@ array = data.values
 X = array[:,0:165]
 Y = array[:,166]
 
-#Aplicando o PCA com todas as 165 componentes
-pca = PCA(n_components=165)
+#Aplicando o PCA com todas as 166 componentes
+pca = PCA()
 pca.fit(X)
 
 #Verificando a variancia acumulada
@@ -27,7 +25,7 @@ var=np.cumsum(np.round(pca.explained_variance_ratio_, decimals=4)*100)
 print var
 
 #Selecionando o numero de componentes que mantem a variancia em 80% ----- Resposta da pergunta 1
-pca = PCA(n_components=12)
+pca = PCA(n_components=13)
 X_transf = pca.fit_transform(X)
 
 #Aplicando a regressao logistica aos dados de treino do conjunto de dados original
