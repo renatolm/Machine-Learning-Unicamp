@@ -2,6 +2,12 @@ import numpy as np
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVR
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import mean_absolute_error
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.gaussian_process import GaussianProcess
 
 #############################################################################
 #Carregando o conjunto de dados de treino do csv usando o pandas
@@ -44,21 +50,56 @@ numericos_array_scaled = preprocessing.scale(numericos_array)
 pca = PCA(0.8)
 numericos_array = pca.fit_transform(numericos_array_scaled)
 
-print "componentes restantes apos o pca: "+str(pca.n_components_)
+print "componentes numericos restantes apos o pca: "+str(pca.n_components_)
 
 #############################################################################
 #Juntando os dados de treino numericos e categoricos
 train_X = np.concatenate((numericos_array, data[categoricos].values), axis=1)
-print train_X.shape
+
+#Redividindo o conjunto de treino para determinar o melhor regressor
+X_train, X_test, y_train, y_test = train_test_split(train_X, train_Y, test_size=0.2)
+
+#############################################################################
+#Aplicacao do SVM regressor
+svm_parameters = {'C':[2**(-5), 2**(0), 2**(5), 2**(10)],
+ 'gamma':[2**(-15), 2**(-10), 2**(-5), 2**(0), 2**(5)]}
+
+#svm_parameters = {'C':[2**(-5)],
+# 'gamma':[2**(-15)]}
+
+grid_svr = GridSearchCV(SVR(kernel='rbf'), svm_parameters, cv=3,
+	scoring='neg_mean_absolute_error')
+grid_svr.fit(X_train, y_train)
+
+svr = SVR(C=grid_svr.best_params_['C'], gamma=grid_svr.best_params_['gamma'], kernel='rbf')
+svr.fit(X_train, y_train)
+
+y_pred = svr.predict(X_test)
+
+print "O MAE do svr foi "+str(mean_absolute_error(y_test, y_pred))
+
+#############################################################################
+#Aplicacao do Gradient Boosting Regression
+gbr_parameters = {'n_estimators':[30,70,100],'learning_rate':[0.1,0.05],'max_depth':[5]}
+
+#gbr_parameters = {'n_estimators':[30],'learning_rate':[0.1],'max_depth':[5]}
+
+grid_gbr = GridSearchCV(GradientBoostingRegressor(), gbr_parameters, cv=3,
+	scoring='neg_mean_absolute_error')
+grid_gbr.fit(X_train, y_train)
+
+gbr = GradientBoostingRegressor(n_estimators=grid_gbr.best_params_['n_estimators'],
+	 learning_rate=grid_gbr.best_params_['learning_rate'],
+	  max_depth=grid_gbr.best_params_['max_depth'])
+gbr.fit(X_train, y_train)
+
+y_pred = gbr.predict(X_test)
+
+print "O MAE do gbr foi "+str(mean_absolute_error(y_test, y_pred))
 
 #############################################################################
 #Carregando o conjunto de dados de teste do csv usando o pandas
 data_test = pd.read_csv('test.csv', header=None)
-
-print data_test.describe
-
-#Separando os valores a serem estimados do resto dos dados
-test_Y = data_test.pop(0)
 
 #Convertendo os dados categoricos para labels numericos
 for column in categoricos:
@@ -76,4 +117,6 @@ numericos_array_test = pca.fit_transform(numericos_array_scaled_test)
 #############################################################################
 #Juntando os dados de teste numericos e categoricos
 test_X = np.concatenate((numericos_array_test, data_test[categoricos].values), axis=1)
-print test_X.shape
+
+#############################################################################
+#Aplicacao do melhor regressor 
