@@ -47,12 +47,12 @@ print "numericos restantes: "+str(numericos.values)
 #Aplicando escala e o PCA nos dados numericos de treino
 numericos_array = data[numericos].values
 
-#numericos_array_scaled = preprocessing.scale(numericos_array)
+numericos_array_scaled = preprocessing.scale(numericos_array)
 
-#pca = PCA(0.8)
-#numericos_array = pca.fit_transform(numericos_array_scaled)
+pca = PCA(0.8)
+numericos_array = pca.fit_transform(numericos_array_scaled)
 
-#print "componentes numericos restantes apos o pca: "+str(pca.n_components_)
+print "componentes numericos restantes apos o pca: "+str(pca.n_components_)
 
 #############################################################################
 #Juntando os dados de treino numericos e categoricos
@@ -137,10 +137,10 @@ for column in categoricos:
 #Aplicando escala e o PCA nos dados numericos de teste
 numericos_array_test = data_test[numericos-1].values
 
-#numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
+numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
 
-#pca = PCA(n_components=10)
-#numericos_array_test = pca.fit_transform(numericos_array_scaled_test)
+pca_test = PCA(n_components=pca.n_components_)
+numericos_array_test = pca_test.fit_transform(numericos_array_scaled_test)
 
 #############################################################################
 #Juntando os dados de teste numericos e categoricos
