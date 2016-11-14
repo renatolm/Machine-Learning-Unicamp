@@ -96,18 +96,18 @@ print "O MAE do gbr foi "+str(mean_absolute_error(y_test, y_pred))
 
 #############################################################################
 #Aplicacao do Gaussian Regression
-gp_params = {'alpha':['1**(-20)', '1**(-10)', '1**(-5)']}
+#gp_params = {'alpha':['1**(-20)', '1**(-10)', '1**(-5)']}
 
-grid_gp = GridSearchCV(GaussianProcessRegressor(), gp_params, cv=3,
-	scoring='neg_mean_absolute_error')
-grid_gp.fit(X_train, y_train)
+#grid_gp = GridSearchCV(GaussianProcessRegressor(), gp_params, cv=3,
+#	scoring='neg_mean_absolute_error')
+#grid_gp.fit(X_train, y_train)
 
-gp = GaussianProcessRegressor(alpha=grid_gp.best_params_['alpha'])
-gp.fit(X_train, y_train)
+#gp = GaussianProcessRegressor(alpha=grid_gp.best_params_['alpha'])
+#gp.fit(X_train, y_train)
 
-y_pred = gp.predict(X_test)
+#y_pred = gp.predict(X_test)
 
-print "O MAE do gp foi "+str(mean_absolute_error(y_test, y_pred))
+#print "O MAE do gp foi "+str(mean_absolute_error(y_test, y_pred))
 
 #############################################################################
 #Aplicacao do Bayesian Regression
