@@ -32,15 +32,15 @@ for column in categoricos:
 
 #############################################################################
 #Eliminando as colunas de dados numericos com variancia menor do que 1
-numericos_new = []
+#numericos_new = []
 
-for column in numericos:
-	if data[column].var() < 1:
-		data.pop(column)
-	else:
-		numericos_new.append(column)
+#for column in numericos:
+#	if data[column].var() < 1:
+#		data.pop(column)
+#	else:
+#		numericos_new.append(column)
 
-numericos = pd.Index(numericos_new)
+#numericos = pd.Index(numericos_new)
 print "numericos restantes: "+str(numericos.values)
 
 #############################################################################
@@ -52,7 +52,7 @@ numericos_array_scaled = preprocessing.scale(numericos_array)
 pca = PCA(0.8)
 numericos_array = pca.fit_transform(numericos_array_scaled)
 
-print "componentes numericos restantes apos o pca: "+str(pca.components_)
+print "componentes numericos restantes apos o pca: "+str(pca.n_components_)
 
 #############################################################################
 #Juntando os dados de treino numericos e categoricos
@@ -139,7 +139,7 @@ numericos_array_test = data_test[numericos-1].values
 
 numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
 
-#pca = PCA(n_components=10)
+pca = PCA(n_components=10)
 numericos_array_test = pca.fit_transform(numericos_array_scaled_test)
 
 #############################################################################
