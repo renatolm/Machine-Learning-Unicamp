@@ -96,7 +96,7 @@ print "O MAE do gbr foi "+str(mean_absolute_error(y_test, y_pred))
 
 #############################################################################
 #Aplicacao do Gaussian Regression
-gp_parameters = {'regr':['constant', 'linear', 'quadratic'],
+gp_params = {'regr':['constant', 'linear', 'quadratic'],
 	'theta0':[0.01,0.1,1.0],
 	'thetaL':[0.0001,0.001,0.01],
 	'thetaU':[0.1,1.0,10.0]}
