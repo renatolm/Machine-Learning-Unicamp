@@ -10,6 +10,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn import linear_model
 from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import StandardScaler
 
 #############################################################################
 #Carregando o conjunto de dados de treino do csv usando o pandas
@@ -48,10 +49,11 @@ print "numericos restantes: "+str(numericos.values)
 numericos_array = data[numericos].values
 
 #numericos_array_scaled = preprocessing.scale(numericos_array)
+scaler = StandardScaler()
+numericos_array_scaled = scaler.fit_transform(numericos_array)
 
 pca = PCA(0.8)
-#numericos_array = pca.fit_transform(numericos_array_scaled)
-numericos_array = pca.fit_transform(numericos_array)
+numericos_array = pca.fit_transform(numericos_array_scaled)
 
 print "componentes numericos restantes apos o pca: "+str(pca.n_components_)
 
@@ -139,10 +141,10 @@ for column in categoricos:
 numericos_array_test = data_test[numericos-1].values
 
 #numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
+numericos_array_scaled_test = scaler.transform(numericos_array_test)
 
 pca_test = PCA(n_components=pca.n_components_)
-#numericos_array_test = pca_test.fit_transform(numericos_array_scaled_test)
-numericos_array_test = pca_test.fit_transform(numericos_array_test)
+numericos_array_test = pca_test.fit_transform(numericos_array_scaled_test)
 
 #############################################################################
 #Juntando os dados de teste numericos e categoricos
