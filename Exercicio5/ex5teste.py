@@ -143,8 +143,9 @@ numericos_array_test = data_test[numericos-1].values
 #numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
 numericos_array_scaled_test = scaler.transform(numericos_array_test)
 
-pca_test = PCA(n_components=pca.n_components_)
-numericos_array_test = pca_test.fit_transform(numericos_array_scaled_test)
+#pca_test = PCA(n_components=pca.n_components_)
+#numericos_array_test = pca_test.fit_transform(numericos_array_scaled_test)
+numericos_array_test = pca.transform(numericos_array_scaled_test)
 
 #############################################################################
 #Juntando os dados de teste numericos e categoricos
