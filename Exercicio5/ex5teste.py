@@ -64,8 +64,10 @@ X_train, X_test, y_train, y_test = train_test_split(train_X, train_Y, test_size=
 
 #############################################################################
 #Aplicacao do SVM regressor
-svm_parameters = {'C':[2**(-5), 2**(0), 2**(5), 2**(10)],
- 'gamma':[2**(-15), 2**(-10), 2**(-5), 2**(0), 2**(5)]}
+#svm_parameters = {'C':[2**(-5), 2**(0), 2**(5), 2**(10)],
+# 'gamma':[2**(-15), 2**(-10), 2**(-5), 2**(0), 2**(5)]}
+
+svm_parameters = {'C':[2**(5)],'gamma':[2**(-10)]}
 
 grid_svr = GridSearchCV(SVR(kernel='rbf'), svm_parameters, cv=3,
 	scoring='neg_mean_absolute_error')
@@ -127,6 +129,8 @@ print "O MAE do svr foi "+str(mean_absolute_error(y_test, y_pred))
 #############################################################################
 #Carregando o conjunto de dados de teste do csv usando o pandas
 data_test = pd.read_csv('test.csv', header=None)
+
+print data_test.head(5)
 
 #Convertendo os dados categoricos para labels numericos
 for column in categoricos:
