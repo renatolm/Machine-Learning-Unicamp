@@ -7,7 +7,7 @@ from sklearn.svm import SVR
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.gaussian_process import GaussianProcess
+from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn import linear_model
 from sklearn.neural_network import MLPRegressor
 
@@ -96,19 +96,13 @@ print "O MAE do gbr foi "+str(mean_absolute_error(y_test, y_pred))
 
 #############################################################################
 #Aplicacao do Gaussian Regression
-gp_params = {'regr':['constant', 'linear', 'quadratic'],
-	'theta0':[0.01,0.1,1.0],
-	'thetaL':[0.0001,0.001,0.01],
-	'thetaU':[0.1,1.0,10.0]}
+gp_params = {'alpha':['1**(-20)', '1**(-10)', '1**(-5)']}
 
-grid_gp = GridSearchCV(GaussianProcess(), gp_params, cv=3,
+grid_gp = GridSearchCV(GaussianProcessRegressor(), gp_params, cv=3,
 	scoring='neg_mean_absolute_error')
 grid_gp.fit(X_train, y_train)
 
-gp = GaussianProcess(regr=grid_gp.best_params_['regr'],
-	theta0=grid_gp.best_params_['theta0'],
-	thetaL=grid_gp.best_params_['thetaL'],
-	thetaU=grid_gp.best_params_['thetaU'])
+gp = GaussianProcessRegressor(alpha=grid_gp.best_params_['alpha'])
 gp.fit(X_train, y_train)
 
 y_pred = gp.predict(X_test)
