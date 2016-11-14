@@ -18,6 +18,7 @@ data = pd.read_csv('train.csv', header=None)
 #Separando os valores a serem estimados do resto dos dados
 train_Y = data.pop(0)
 
+data = data.reset_index(drop=True)
 #Separando os dados numericos dos categoricos
 numericos = data.select_dtypes(include=['int64']).columns
 categoricos = data.select_dtypes(include=['object']).columns
