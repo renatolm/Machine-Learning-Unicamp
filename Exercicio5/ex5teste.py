@@ -52,7 +52,7 @@ numericos_array_scaled = preprocessing.scale(numericos_array)
 pca = PCA(0.8)
 numericos_array = pca.fit_transform(numericos_array_scaled)
 
-print "componentes numericos restantes apos o pca: "+str(pca.n_components_)
+print "componentes numericos restantes apos o pca: "+str(pca.components_)
 
 #############################################################################
 #Juntando os dados de treino numericos e categoricos
@@ -139,7 +139,7 @@ numericos_array_test = data_test[numericos-1].values
 
 numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
 
-pca = PCA(n_components=10)
+#pca = PCA(n_components=10)
 numericos_array_test = pca.fit_transform(numericos_array_scaled_test)
 
 #############################################################################
@@ -148,9 +148,9 @@ test_X = np.concatenate((numericos_array_test, data_test[categoricos].values), a
 
 #############################################################################
 #Aplicacao do melhor regressor 
-#svr = SVR(C=grid_svr.best_params_['C'], gamma=grid_svr.best_params_['gamma'], kernel='rbf')
+svr = SVR(C=grid_svr.best_params_['C'], gamma=grid_svr.best_params_['gamma'], kernel='rbf')
 #Ajustando sobre todos os dados de treino
-#svr.fit(train_X, train_Y)
+svr.fit(train_X, train_Y)
 
 y_pred = svr.predict(test_X)
 
