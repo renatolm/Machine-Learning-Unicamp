@@ -8,6 +8,8 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.gaussian_process import GaussianProcess
+from sklearn import linear_model
+from sklearn.neural_network import MLPRegressor
 
 #############################################################################
 #Carregando o conjunto de dados de treino do csv usando o pandas
@@ -26,7 +28,7 @@ print "categoricos: "+str(categoricos.values)
 
 #Convertendo os dados categoricos para labels numericos
 for column in categoricos:
-	data[column] = pd.Categorical.from_array(data[column]).labels
+	data[column] = pd.Categorical(data[column]).codes
 
 #############################################################################
 #Eliminando as colunas de dados numericos com variancia menor do que 1
@@ -64,9 +66,6 @@ X_train, X_test, y_train, y_test = train_test_split(train_X, train_Y, test_size=
 svm_parameters = {'C':[2**(-5), 2**(0), 2**(5), 2**(10)],
  'gamma':[2**(-15), 2**(-10), 2**(-5), 2**(0), 2**(5)]}
 
-#svm_parameters = {'C':[2**(-5)],
-# 'gamma':[2**(-15)]}
-
 grid_svr = GridSearchCV(SVR(kernel='rbf'), svm_parameters, cv=3,
 	scoring='neg_mean_absolute_error')
 grid_svr.fit(X_train, y_train)
@@ -82,8 +81,6 @@ print "O MAE do svr foi "+str(mean_absolute_error(y_test, y_pred))
 #Aplicacao do Gradient Boosting Regression
 gbr_parameters = {'n_estimators':[30,70,100],'learning_rate':[0.1,0.05],'max_depth':[5]}
 
-#gbr_parameters = {'n_estimators':[30],'learning_rate':[0.1],'max_depth':[5]}
-
 grid_gbr = GridSearchCV(GradientBoostingRegressor(), gbr_parameters, cv=3,
 	scoring='neg_mean_absolute_error')
 grid_gbr.fit(X_train, y_train)
@@ -98,16 +95,62 @@ y_pred = gbr.predict(X_test)
 print "O MAE do gbr foi "+str(mean_absolute_error(y_test, y_pred))
 
 #############################################################################
+#Aplicacao do Gaussian Regression
+gp_parameters = {'regr':['constant', 'linear', 'quadratic'],
+	'theta0':[0.01,0.1,1.0],
+	'thetaL':[0.0001,0.001,0.01],
+	'thetaU':[0.1,1.0,10.0]}
+
+grid_gp = GridSeachCV(GaussianProcess(), gp_params, cv=3,
+	scoring='neg_mean_absolute_error')
+grid_gp.fit(X_train, y_train)
+
+gp = GaussianProcess(regr=grid_gp.best_params_['regr'],
+	theta0=grid_gp.best_params_['theta0'],
+	thetaL=grid_gp.best_params_['thetaL'],
+	thetaU=grid_gp.best_params_['thetaU'])
+gp.fit(X_train, y_train)
+
+y_pred = gp.predict(X_test)
+
+print "O MAE do gp foi "+str(mean_absolute_error(y_test, y_pred))
+
+#############################################################################
+#Aplicacao do Bayesian Regression
+
+bayes = linear_model.BayesianRidge()
+bayes.fit(X_train, y_train)
+
+y_pred = bayes.predict(X_test)
+
+print "O MAE do bayes foi "+str(mean_absolute_error(y_test, y_pred))
+
+#############################################################################
+#Aplicacao do Neural Net Regressor
+nn_parameters = {'hidden_layer_sizes':[10,20,30,40]}
+
+grid_nn = GridSearchCV(MLPRegressor(solver='lbfgs'), nn_parameters, cv=3)
+grid_nn.fit(X_train, y_train)
+
+nnet = MLPRegressor(hidden_layer_sizes=grid_nn.best_params_['hidden_layer_sizes'],
+	 solver='lbfgs')
+nnet.fit(X_train, y_train)
+
+y_pred = nnet.predict(X_test)
+
+print "O MAE da nnet foi "+str(mean_absolute_error(y_test, y_pred))
+
+#############################################################################
 #Carregando o conjunto de dados de teste do csv usando o pandas
 data_test = pd.read_csv('test.csv', header=None)
 
 #Convertendo os dados categoricos para labels numericos
 for column in categoricos:
-	data_test[column] = pd.Categorical.from_array(data_test[column]).labels
+	data_test[column-1] = pd.Categorical(data_test[column-1]).codes
 
 #############################################################################
 #Aplicando escala e o PCA nos dados numericos de teste
-numericos_array_test = data_test[numericos].values
+numericos_array_test = data_test[numericos-1].values
 
 numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
 
