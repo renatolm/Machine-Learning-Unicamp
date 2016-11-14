@@ -157,3 +157,10 @@ test_X = np.concatenate((numericos_array_test, data_test[categoricos].values), a
 
 #############################################################################
 #Aplicacao do melhor regressor 
+svr = SVR(C=grid_svr.best_params_['C'], gamma=grid_svr.best_params_['gamma'], kernel='rbf')
+#Ajustando sobre todos os dados de treino
+svr.fit(train_X, train_Y)
+
+y_pred = svr.predict(test_X)
+
+np.savetxt("resultados.csv", y_pred)
