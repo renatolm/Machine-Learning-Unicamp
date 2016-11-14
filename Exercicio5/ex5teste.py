@@ -18,8 +18,6 @@ data = pd.read_csv('train.csv', header=None)
 #Separando os valores a serem estimados do resto dos dados
 train_Y = data.pop(0)
 
-data = data[:,1:]
-
 #Separando os dados numericos dos categoricos
 numericos = data.select_dtypes(include=['int64']).columns
 categoricos = data.select_dtypes(include=['object']).columns
@@ -32,7 +30,6 @@ print "categoricos: "+str(categoricos.values)
 for column in categoricos:
 	data[column] = pd.Categorical(data[column]).codes
 
-print data.head(5)
 #############################################################################
 #Eliminando as colunas de dados numericos com variancia menor do que 1
 numericos_new = []
@@ -132,13 +129,10 @@ print "O MAE do svr foi "+str(mean_absolute_error(y_test, y_pred))
 #Carregando o conjunto de dados de teste do csv usando o pandas
 data_test = pd.read_csv('test.csv', header=None)
 
-print data_test.head(5)
-
 #Convertendo os dados categoricos para labels numericos
 for column in categoricos:
 	data_test[column-1] = pd.Categorical(data_test[column-1]).codes
 
-print data_test.head(5)
 #############################################################################
 #Aplicando escala e o PCA nos dados numericos de teste
 numericos_array_test = data_test[numericos-1].values
@@ -154,9 +148,9 @@ test_X = np.concatenate((numericos_array_test, data_test[categoricos].values), a
 
 #############################################################################
 #Aplicacao do melhor regressor 
-svr = SVR(C=grid_svr.best_params_['C'], gamma=grid_svr.best_params_['gamma'], kernel='rbf')
+#svr = SVR(C=grid_svr.best_params_['C'], gamma=grid_svr.best_params_['gamma'], kernel='rbf')
 #Ajustando sobre todos os dados de treino
-svr.fit(train_X, train_Y)
+#svr.fit(train_X, train_Y)
 
 y_pred = svr.predict(test_X)
 
