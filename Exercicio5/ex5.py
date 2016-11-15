@@ -1,7 +1,6 @@
 import numpy as np 
 import pandas as pd
 from sklearn import preprocessing
-from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
 from sklearn.model_selection import GridSearchCV
@@ -43,16 +42,7 @@ for column in numericos:
 numericos = pd.Index(numericos_new)
 print "numericos restantes: "+str(numericos.values)
 
-#############################################################################
-#Aplicando escala e o PCA nos dados numericos de treino
 numericos_array = data[numericos].values
-
-numericos_array_scaled = preprocessing.scale(numericos_array)
-
-pca = PCA(0.8)
-numericos_array = pca.fit_transform(numericos_array_scaled)
-
-print "componentes numericos restantes apos o pca: "+str(pca.n_components_)
 
 #############################################################################
 #Juntando os dados de treino numericos e categoricos
@@ -95,21 +85,6 @@ y_pred = gbr.predict(X_test)
 print "O MAE do gbr foi "+str(mean_absolute_error(y_test, y_pred))
 
 #############################################################################
-#Aplicacao do Gaussian Regression
-#gp_params = {'alpha':['1**(-20)', '1**(-10)', '1**(-5)']}
-
-#grid_gp = GridSearchCV(GaussianProcessRegressor(), gp_params, cv=3,
-#	scoring='neg_mean_absolute_error')
-#grid_gp.fit(X_train, y_train)
-
-#gp = GaussianProcessRegressor(alpha=grid_gp.best_params_['alpha'])
-#gp.fit(X_train, y_train)
-
-#y_pred = gp.predict(X_test)
-
-#print "O MAE do gp foi "+str(mean_absolute_error(y_test, y_pred))
-
-#############################################################################
 #Aplicacao do Bayesian Regression
 
 bayes = linear_model.BayesianRidge()
@@ -142,14 +117,7 @@ data_test = pd.read_csv('test.csv', header=None)
 for column in categoricos:
 	data_test[column-1] = pd.Categorical(data_test[column-1]).codes
 
-#############################################################################
-#Aplicando escala e o PCA nos dados numericos de teste
 numericos_array_test = data_test[numericos-1].values
-
-numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
-
-pca = PCA(n_components=10)
-numericos_array_test = pca.fit_transform(numericos_array_scaled_test)
 
 #############################################################################
 #Juntando os dados de teste numericos e categoricos
@@ -158,6 +126,7 @@ test_X = np.concatenate((numericos_array_test, data_test[categoricos].values), a
 #############################################################################
 #Aplicacao do melhor regressor 
 svr = SVR(C=grid_svr.best_params_['C'], gamma=grid_svr.best_params_['gamma'], kernel='rbf')
+
 #Ajustando sobre todos os dados de treino
 svr.fit(train_X, train_Y)
 
