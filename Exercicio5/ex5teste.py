@@ -33,15 +33,15 @@ for column in categoricos:
 
 #############################################################################
 #Eliminando as colunas de dados numericos com variancia menor do que 1
-#numericos_new = []
+numericos_new = []
 
-#for column in numericos:
-#	if data[column].var() < 1:
-#		data.pop(column)
-#	else:
-#		numericos_new.append(column)
+for column in numericos:
+	if data[column].var() < 1:
+		data.pop(column)
+	else:
+		numericos_new.append(column)
 
-#numericos = pd.Index(numericos_new)
+numericos = pd.Index(numericos_new)
 print "numericos restantes: "+str(numericos.values)
 
 #############################################################################
@@ -141,11 +141,9 @@ for column in categoricos:
 #Aplicando escala e o PCA nos dados numericos de teste
 numericos_array_test = data_test[numericos-1].values
 
-#numericos_array_scaled_test = preprocessing.scale(numericos_array_test)
 #numericos_array_scaled_test = scaler.transform(numericos_array_test)
 #numericos_array_test = scaler.transform(numericos_array_test)
 
-#pca_test = PCA(n_components=pca.n_components_)
 #numericos_array_test = pca.transform(numericos_array_scaled_test)
 
 #############################################################################
