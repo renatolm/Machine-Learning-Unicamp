@@ -1,0 +1,5 @@
+Links:
+http://www.nltk.org/api/nltk.stem.html
+https://de.dariah.eu/tatom/preprocessing.html
+http://www.slideshare.net/jimmy_lai/text-classification-in-python-using-pandas-scikitlearn-ipython-notebook-and-matplotlib
+
