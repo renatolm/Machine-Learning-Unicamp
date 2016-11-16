@@ -1,0 +1,5 @@
+import numpy as np
+from sklearn.datasets import load_files
+
+data = load_files('filesk/')
+print data.shape

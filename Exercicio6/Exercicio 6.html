@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Exercicio 6</title>
+</head>
+
+<body>
+<h1>Exercício 6</h1>
+
+
+<p> <b>Data de entrega: 16/11, as 7:00 (da manha).</b>
+
+</p><p> O diretorio  <a href="http://www.ic.unicamp.br/%7Ewainer/cursos/2s2016/ml/ex6">ex6</a> contem 2 zip files. Ambos
+contem 5000 textos, um por arquivo. O arquivo <a href="http://www.ic.unicamp.br/%7Ewainer/cursos/2s2016/ml/ex6/fileR.zip">fileR.zip</a>
+gera um diretorio com os 5000 textos. O arquivo <a href="http://www.ic.unicamp.br/%7Ewainer/cursos/2s2016/ml/ex6/filesk.zip">filesk.zip</a> gera um diretorio de diretorios (com as
+classes) e os textos estao no subdiretorio apropriado. Esse parece ser
+o format mais util para a função <a href="http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_files.html#sklearn.datasets.load_files">sklearn.datasets.load_files</a> 
+
+</p><p> O arquivo <a href="http://www.ic.unicamp.br/%7Ewainer/cursos/2s2016/ml/ex6/categoriy.tab">category.tab</a> contem a
+classe de cada documento.
+
+</p><p>Eu ja nao me lembro de onde sao os textos , mas sao parte de algum
+dataset de text mining com posts de tamanho medio de tecnologia. 
+
+</p><h2> Parte 1 - processamento de texto</h2>
+
+<p>Faça as tarefas usuais de processameno de textos:
+</p><ul>
+  <li> conversao de caracteres maiusculos para minusculos</li>
+  <li> remoçao de pontuaçao</li>
+  <li> remoçao de stop words</li>
+  <li> steming dos termos </li>
+  <li> remocao dos termos que aparecem em um so documento </li>
+
+</ul>
+
+<p>Converta os textos processados acima em um bag of words no formato
+binario (0/1 se o termo aparece ou nao aparece no documento) e no
+formato de term frequency.
+
+</p><p>Em R o pacote <a href="https://cran.r-project.org/web/packages/tm/index.html">tm</a> faz a maioria se nao todo o preprocessamento e a
+conversao para uma matrix de termo/documento nos dois formatos. Este
+é um <a href="https://rstudio-pubs-static.s3.amazonaws.com/31867_8236987cf0a8444e962ccd2aec46d9c3.html">tutorial
+curto sobre o tm</a>
+
+</p><p> Em Python, o sklearn tem funçoes para fazer a mesma coisa. Um <a href="http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html">tutorial
+sobre as funcoes no sklearn</a>
+
+</p><h2> Parte 2 - classificador multiclasse na matriz termo-documento
+original</h2>
+
+<p> O preprocessamento acima deve ser feito para todos os textos. 
+
+</p><p>Divida o conjunto em 1000 documentos de teste e 4000 de treino
+aleatoriamente (pode ser estratificado ou nao).
+
+</p><p> Rode o naive bayes na matrix binaria. Qual a acuracia?
+
+</p><p> Rode o logistic regression na matrix binaria e de term
+frequency. Quais as acurácias.
+
+</p><p> Em Python use C=10000 em
+sklearn.linear_model.LogisticRegression para evitar que
+haja regularizacao.
+
+
+
+</p><h2> Parte 3 - classificador multiclasse na matriz termo-documento
+reduzida</h2>
+
+<p> Rode o PCA e reduza o numero de dimensoes da matriz de term
+frequency para 99% da variancia original.
+
+</p><p> Rode pelo menos 2 algoritmos dentre SVM com RBF, gradient boosting
+e random forest na matrix com o numero de dimensoes reduzidas. Quais
+as acurácias?
+
+
+
+
+
+
+
+</p><hr>
+<address></address>
+<!-- hhmts start -->Last modified: Mon Oct 31 19:08:16 BRST 2016 <!-- hhmts end -->
+ 
+</body></html>
