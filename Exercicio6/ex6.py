@@ -12,6 +12,7 @@ from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
 
 data = load_files('filesk/')
 
@@ -82,6 +83,36 @@ gbm = GradientBoostingClassifier(n_estimators=grid.best_params_['n_estimators'],
 	  max_depth=grid.best_params_['max_depth'])
 gbm.fit(X_train_transf, y_train_transf)
 
-gbm_predicted= gbm.predict(X_test_transf)
+gbm_predicted = gbm.predict(X_test_transf)
 
 print "Acuracia do GBM na matriz de frequencias reduzida foi: "+str(metrics.accuracy_score(y_test_transf, gbm_predicted))
+
+###########################################################################################
+#Neural Net na matriz de frequencias reduzida pelo PCA
+nn_parameters = {'hidden_layer_sizes':[10,20,30,40]}
+
+grid = GridSearchCV(MLPClassifier(solver='lbfgs'), nn_parameters, cv=3)
+grid.fit(X_train_transf, y_train_transf)
+
+nnet = MLPClassifier(hidden_layer_sizes=grid.best_params_['hidden_layer_sizes'],
+	 solver='lbfgs')
+nnet.fit(X_train_transf, y_train_transf)
+
+nnet_predicted = nnet.predict(X_test_transf)
+
+print "Acuracia da Neural Net na matriz de frequencias reduzida foi: "+str(metrics.accuracy_score(y_test_transf, nnet_predicted))
+
+###########################################################################################
+#Random Forest na matriz de frequencias reduzida pelo PCA
+rf_parameters = {'max_features':[10,15,20,25],'n_estimators':[100,200,300,400]}
+
+grid = GridSearchCV(RandomForestClassifier(), rf_parameters, cv=3)
+grid.fit(X_train_transf, y_train_transf)
+
+rf = RandomForestClassifier(max_features=grid.best_params_['max_features'],
+	 n_estimators=grid.best_params_['n_estimators'])
+rf.fit(X_train_transf, y_train_transf)
+
+rf_predicted = rf.predict(X_test_transf)
+
+print "Acuracia da Random Forest na matriz de frequencias reduzida foi: "+str(metrics.accuracy_score(y_test_transf, rf_predicted))
