@@ -1,0 +1,5 @@
+Acuracia do Naive Bayes na matriz binaria foi: 0.788
+Acuracia do Logistic Regression na matriz binaria foi: 0.808
+Acuracia do Logistic Regression na matriz de frequencias foi: 0.86
+Acuracia do SVM na matriz de frequencias reduzida foi: 0.87
+Acuracia do GBM na matriz de frequencias reduzida foi: 0.823

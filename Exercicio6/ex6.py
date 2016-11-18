@@ -58,13 +58,8 @@ X_train_transf, X_test_transf, y_train_transf, y_test_transf = train_test_split(
 
 ###########################################################################################
 #SVM na matriz de frequencias reduzida pelo PCA
-svm_parameters = {'C':[2**(-5), 2**(0), 2**(5)],
- 'gamma':[2**(-10), 2**(-5), 2**(0), 2**(5)]}
 
-grid = GridSearchCV(SVC(kernel='rbf'), svm_parameters, cv=3)
-grid.fit(X_train_transf, y_train_transf)
-
-svm = SVC(C=grid.best_params_['C'], gamma=grid.best_params_['gamma'], kernel='rbf')
+svm = SVC(C=2**(5), gamma=2**(-5), kernel='rbf')
 svm.fit(X_train_transf, y_train_transf)
 
 svm_predicted = svm.predict(X_test_transf)
@@ -73,14 +68,8 @@ print "Acuracia do SVM na matriz de frequencias reduzida foi: "+str(metrics.accu
 
 ###########################################################################################
 #GBM na matriz de frequencias reduzida pelo PCA
-gbm_parameters = {'n_estimators':[30,70,100],'learning_rate':[0.1,0.05],'max_depth':[5]}
 
-grid = GridSearchCV(GradientBoostingClassifier(), gbm_parameters, cv=3)
-grid.fit(X_train_transf, y_train_transf)
-
-gbm = GradientBoostingClassifier(n_estimators=grid.best_params_['n_estimators'],
-	 learning_rate=grid.best_params_['learning_rate'],
-	  max_depth=grid.best_params_['max_depth'])
+gbm = GradientBoostingClassifier(n_estimators=70, learning_rate=0.1, max_depth=5)
 gbm.fit(X_train_transf, y_train_transf)
 
 gbm_predicted = gbm.predict(X_test_transf)

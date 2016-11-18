@@ -1,0 +1,198 @@
+\documentclass{article}
+\usepackage{listings}             % Include the listings-package
+\usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+\usepackage{geometry}
+\usepackage[most]{tcolorbox} %apply colors on background
+    
+    \tcbset{	%background color configuration
+    frame code={}
+    center title,
+    left=0pt,
+    right=0pt,
+    top=0pt,
+    bottom=0pt,
+    colback=gray!30,
+    colframe=white,
+    width=\dimexpr\textwidth\relax,
+    enlarge left by=0mm,
+    boxsep=5pt,
+    arc=0pt,outer arc=0pt,
+    }
+
+\title{Exercício 6 - MO444 - Aprendizado de máquina e reconhecimento de padrões}
+\date{}
+\author{Renato Lopes Moura - 163050}
+    
+\geometry{verbose,tmargin=0.3in,bmargin=0.3in,lmargin=0.25in,rmargin=0.25in}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{9} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{9}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+\begin{document}
+
+\maketitle
+
+\section{Código}
+\subsection{Leitura de dados e preprocessamento}
+%\lstinputlisting[language=Python]{ex5.py}
+\begin{tcolorbox}
+\begin{python}
+import numpy as np
+from sklearn.datasets import load_files
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+from sklearn.decomposition import PCA
+from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
+
+data = load_files('filesk/')
+
+count_vect_bin = CountVectorizer(stop_words='english',strip_accents='ascii', min_df=2, binary=True)
+count_vect = CountVectorizer(stop_words='english',strip_accents='ascii', min_df=2)
+
+X_bag_of_words = count_vect_bin.fit_transform(data.data)
+X_count = count_vect.fit_transform(data.data)
+
+X_freq = TfidfTransformer(use_idf=False).fit_transform(X_count)
+\end{python}
+\end{tcolorbox}
+
+Ao instanciar os objetos \textit{count\_vect\_bin} e \textit{count\_vect} são definidos os seguintes parâmetros da classe CountVectorizer:
+\begin{itemize}
+\item \textit{stop\_words}: idioma de referência das \textit{stop\_words}
+\item \textit{strip\_accents}: codificação (unicode/utf8) dos acentos a serem removidos
+\item \textit{min\_df}: número mínimo de ocorrências do termo para ser incluído na matriz/\textit{bag of words}
+\item \textit{binary}: montar uma \textit{bag of words} binária ou não
+\end{itemize}
+
+Portanto, ao aplicar o método \textit{fit\_transform()} nos textos já é feito todo o pré-processamento e separação dos termos, além da montagem das \textit{bag of words} no formato de matrizes esparsas. \par
+Por fim, é gerada a matriz de frequências a partir da \textit{bag of words} nao binária.
+
+\newpage
+
+\subsection{Naive Bayes e Logistic Regression}
+\begin{tcolorbox}
+\begin{python}
+###########################################################################################
+#Naive Bayes na matriz binaria
+X_train, X_test, y_train, y_test = train_test_split(X_bag_of_words, data.target, test_size=1000)
+
+naive_bayes = MultinomialNB().fit(X_train, y_train)
+nb_predicted = naive_bayes.predict(X_test)
+
+print "Acuracia do Naive Bayes na matriz binaria foi: "+str(metrics.accuracy_score(y_test, nb_predicted))
+
+###########################################################################################
+#Logistic Regression na matriz binaria
+logistic = LogisticRegression(C=10000).fit(X_train, y_train)
+log_predicted = logistic.predict(X_test)
+
+print "Acuracia do Logistic Regression na matriz binaria foi: "+
+   str(metrics.accuracy_score(y_test, log_predicted))
+
+###########################################################################################
+#Logistic Regression na matriz de term frequency
+X_train_freq, X_test_freq, y_train_freq, y_test_freq = train_test_split(X_freq, data.target, test_size=1000)
+
+logistic_freq = LogisticRegression(C=10000).fit(X_train_freq, y_train_freq)
+log_freq_predicted = logistic_freq.predict(X_test_freq)
+
+print "Acuracia do Logistic Regression na matriz de frequencias foi: "+
+   str(metrics.accuracy_score(y_test_freq, log_freq_predicted))
+
+\end{python}
+\end{tcolorbox}
+
+\newpage
+
+\subsection{PCA, SVM e GBM}
+\begin{tcolorbox}
+\begin{python}
+###########################################################################################
+#Aplicacao do PCA na matriz de term frequency e separacao dos conjuntos de treino e teste
+pca = PCA(0.99)
+X_transf = pca.fit_transform(X_freq.toarray())
+
+X_train_transf, X_test_transf, y_train_transf, y_test_transf = train_test_split(X_transf, 
+   data.target, test_size=1000)
+
+###########################################################################################
+#SVM na matriz de frequencias reduzida pelo PCA
+
+svm = SVC(C=2**(5), gamma=2**(-5), kernel='rbf')
+svm.fit(X_train_transf, y_train_transf)
+
+svm_predicted = svm.predict(X_test_transf)
+
+print "Acuracia do SVM na matriz de frequencias reduzida foi: "+
+   str(metrics.accuracy_score(y_test_transf, svm_predicted))
+
+###########################################################################################
+#GBM na matriz de frequencias reduzida pelo PCA
+
+gbm = GradientBoostingClassifier(n_estimators=70, learning_rate=0.1, max_depth=5)
+gbm.fit(X_train_transf, y_train_transf)
+
+gbm_predicted = gbm.predict(X_test_transf)
+
+print "Acuracia do GBM na matriz de frequencias reduzida foi: "+
+   str(metrics.accuracy_score(y_test_transf, gbm_predicted))
+\end{python}
+\end{tcolorbox}
+
+\newpage
+
+\section{Outputs}
+\begin{tcolorbox}
+Acuracia do Naive Bayes na matriz binaria foi: 0.788 \\
+Acuracia do Logistic Regression na matriz binaria foi: 0.808 \\
+Acuracia do Logistic Regression na matriz de frequencias foi: 0.86 \\
+Acuracia do SVM na matriz de frequencias reduzida foi: 0.87 \\
+Acuracia do GBM na matriz de frequencias reduzida foi: 0.823
+\end{tcolorbox}
+
+
+\end{document}
