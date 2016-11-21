@@ -62,13 +62,9 @@ for i in np.arange(0,array2.shape[0],10):
 	elif np.mean(array2[0:chunk2,1]) < (mean2-tol_mean2):
 		chunk2 = chunk2+10
 	elif (np.mean(array2[0:3*chunk2,1]) < (mean2+tol_mean2)) and (np.mean(array2[0:3*chunk2,1]) > (mean2-tol_mean2)):
-		print "mean chunk size: "+str(np.mean(array2[0:chunk2,1]))
-		print "mean 2xchunk size: "+str(np.mean(array2[0:2*chunk2,1]))
-		print "mean 3xchunk size: "+str(np.mean(array2[0:3*chunk2,1]))
-		print "mean next chunk: "+str(np.mean(array2[chunk2:2*chunk2,1]))
 		break
 	else:
-		chunk2 = chunk2+1
+		chunk2 = chunk2+10
 
 print "chunk size: "+str(chunk2)
 
@@ -107,13 +103,9 @@ for i in np.arange(0,array3.shape[0],10):
 	elif np.mean(array3[0:chunk3,1]) < (mean3-tol_mean3):
 		chunk3 = chunk3+10
 	elif (np.mean(array3[0:3*chunk3,1]) < (mean3+tol_mean3)) and (np.mean(array3[0:3*chunk3,1]) > (mean3-tol_mean3)):
-		print "mean chunk size: "+str(np.mean(array3[0:chunk3,1]))
-		print "mean 2xchunk size: "+str(np.mean(array3[0:2*chunk3,1]))
-		print "mean 3xchunk size: "+str(np.mean(array3[0:3*chunk3,1]))
-		print "mean next chunk: "+str(np.mean(array3[chunk3:2*chunk3,1]))
 		break
 	else:
-		chunk3 = chunk3+1
+		chunk3 = chunk3+10
 
 print "chunk size: "+str(chunk3)
 
@@ -138,7 +130,7 @@ print "\n"
 #Serie 4
 #Calcula a media e desvio padrao da serie 4 considerando os 25% primeiros dados
 mean4,std4 = meanAndStd(array4[:,1], array4.shape[0]/4)
-tol_mean4 = 0.05*mean4
+tol_mean4 = 0.01*mean4
 
 print "mean serie 4: "+str(mean4)
 print "std serie 4: "+str(std4)
@@ -151,14 +143,14 @@ for i in np.arange(0,array4.shape[0],10):
 		chunk4 = chunk4+10
 	elif np.mean(array4[0:chunk4,1]) < (mean4-tol_mean4):
 		chunk4 = chunk4+10
-	elif (np.mean(array4[0:2*chunk4,1]) < (mean4+tol_mean4)) and (np.mean(array4[0:2*chunk4,1]) > (mean4-tol_mean4)):
+	elif (np.mean(array4[0:3*chunk4,1]) < (mean4+tol_mean4)) and (np.mean(array4[0:3*chunk4,1]) > (mean4-tol_mean4)):
 		print "mean chunk size: "+str(np.mean(array4[0:chunk4,1]))
 		print "mean 2xchunk size: "+str(np.mean(array4[0:2*chunk4,1]))
 		print "mean 3xchunk size: "+str(np.mean(array4[0:3*chunk4,1]))
 		print "mean next chunk: "+str(np.mean(array4[chunk4:2*chunk4,1]))
 		break
 	else:
-		chunk4 = chunk4+1
+		chunk4 = chunk4+10
 
 print "chunk size: "+str(chunk4)
 
@@ -220,7 +212,7 @@ x_dist_4 = anomalia4 - x_ini_4 - 50
 y_dist_4 = array4[anomalia4,1] - y_ini_4
 
 ax3.plot(array4[:,1])
-ax3.arrow(x_ini_4, y_ini_4, x_dist_4, y_dist_4, head_width=10, head_length=20, fc='r', ec='r')
+ax3.arrow(x_ini_4, y_ini_4, x_dist_4, y_dist_4, head_width=1, head_length=2, fc='r', ec='r')
 ax3.set_ylim([min(array4[:,1])-2,max(array4[:,1])+2])
 ax3.set_title("Serie 4")
 
