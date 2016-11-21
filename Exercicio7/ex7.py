@@ -1,0 +1,39 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt 
+
+#Leitura dos dados dos arquivos csv utilizando o pandas
+dados1 = pd.read_csv('serie1.csv')
+dados2 = pd.read_csv('serie2.csv')
+dados3 = pd.read_csv('serie3.csv')
+dados4 = pd.read_csv('serie4.csv')
+dados5 = pd.read_csv('serie5.csv')
+
+#Conversao dos dataframes do pandas para arrays do numpy
+array1 = dados1.values
+array2 = dados2.values
+array3 = dados3.values
+array4 = dados4.values
+array5 = dados5.values
+
+dist1 = []
+for i in range(0,array1.shape[0]-1):
+	dist1.append(np.linalg.norm(array1[i,1] - array1[i+1,1]))
+
+dist1_min = min(dist1)
+dist1_max = max(dist1)
+tol = 5*dist1_min
+
+for i in range(0,array1.shape[0]-1):
+	if (np.linalg.norm(array1[i,1] - array1[i+1,1]) < (dist1_max + tol)):
+		continue
+	else:
+		print "anomalia detectada em "+str(i)
+
+#print str(len(dist1))
+#print "min dist: "+str(dist1_min)
+#print "max dist: "+str(dist1_max)
+
+
+plt.plot(array1[:,1])
+plt.show()
