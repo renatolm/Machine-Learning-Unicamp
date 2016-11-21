@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt 
+import math
 
 #Leitura dos dados dos arquivos csv utilizando o pandas
 dados1 = pd.read_csv('serie1.csv')
@@ -45,28 +46,82 @@ for i in range(0,array1.shape[0]):
 #Serie 2
 #Calcula a media e desvio padrao da serie 2 considerando os 25% primeiros dados
 mean2,std2 = meanAndStd(array2[:,1], array2.shape[0]/4)
-tol2 = 1.75*std2
+tol_mean2 = 0.05*mean2
 
 print "mean serie 2: "+str(mean2)
 print "std serie 2: "+str(std2)
 
-chunk2 = 0
+chunk2 = 1
 for i in range(0,array2.shape[0]):
-	if array2[i,1] > (mean2+std2+tol2):
-		print "anomalia encontrada em "+str(i)+" valor "+str(array2[i,1])
-		anomalia2 = i
+	if np.mean(array2[0:chunk2,1]) > (mean2+tol_mean2):
+		chunk2 = chunk2+1
+	elif np.mean(array2[0:chunk2,1]) < (mean2-tol_mean2):
+		chunk2 = chunk2+1
+	elif (np.mean(array2[0:3*chunk2,1]) < (mean2+tol_mean2)) and (np.mean(array2[0:3*chunk2,1]) > (mean2-tol_mean2)):
+		print "mean chunk size: "+str(np.mean(array2[0:chunk2,1]))
+		print "mean 2xchunk size: "+str(np.mean(array2[0:2*chunk2,1]))
+		print "mean 3xchunk size: "+str(np.mean(array2[0:3*chunk2,1]))
+		print "mean next chunk: "+str(np.mean(array2[chunk2:2*chunk2,1]))
 		break
-	elif array1[i,1] < (mean2-std2-tol2):
-		print "anomalia encontrada em "+str(i)+" valor "+str(array2[i,1])
-		anomalia2 = i
+	else:
+		chunk2 = chunk2+1
+
+print "chunk size: "+str(chunk2)
+
+n_chunks = int(math.floor(array2.shape[0]/chunk2))
+
+for i in range(0,n_chunks):
+	ini = chunk2*i
+	end = chunk2*(i+1)
+
+	if np.mean(array2[ini:end,1]) > (mean2+tol_mean2):
+		print "anomalia encontrada em torno de "+str(ini)+" media "+str(np.mean(array2[ini:end,1]))
+		anomalia2 = int(math.floor((ini+end)/2))
 		break
-	elif array2[i,1] < (mean2+std2-tol2):
-		print "anomalia encontrada em "+str(i)+" valor "+str(array2[i,1])
-		anomalia2 = i
+	elif np.mean(array2[ini:end,1]) < (mean2-tol_mean2):
+		print "anomalia encontrada em torno de "+str(ini)+" media "+str(np.mean(array2[ini:end,1]))
+		anomalia2 = int(math.floor((ini+end)/2))
 		break
-	elif array2[i,1] > (mean2-std2+tol2):
-		print "anomalia encontrada em "+str(i)+" valor "+str(array2[i,1])
-		anomalia2 = i
+
+################################################################################
+#Serie 3
+#Calcula a media e desvio padrao da serie 3 considerando os 25% primeiros dados
+mean3,std3 = meanAndStd(array3[:,1], array3.shape[0]/4)
+tol_mean3 = 0.05*mean3
+
+print "mean serie 3: "+str(mean3)
+print "std serie 3: "+str(std3)
+
+chunk3 = 1
+for i in range(0,array3.shape[0]):
+	if np.mean(array3[0:chunk3,1]) > (mean3+tol_mean3):
+		chunk3 = chunk3+1
+	elif np.mean(array3[0:chunk3,1]) < (mean3-tol_mean3):
+		chunk3 = chunk3+1
+	elif (np.mean(array3[0:3*chunk3,1]) < (mean3+tol_mean3)) and (np.mean(array3[0:3*chunk3,1]) > (mean3-tol_mean3)):
+		print "mean chunk size: "+str(np.mean(array3[0:chunk3,1]))
+		print "mean 2xchunk size: "+str(np.mean(array3[0:2*chunk3,1]))
+		print "mean 3xchunk size: "+str(np.mean(array3[0:3*chunk3,1]))
+		print "mean next chunk: "+str(np.mean(array3[chunk3:2*chunk3,1]))
+		break
+	else:
+		chunk3 = chunk3+1
+
+print "chunk size: "+str(chunk3)
+
+n_chunks = int(math.floor(array3.shape[0]/chunk3))
+
+for i in range(0,n_chunks):
+	ini = chunk3*i
+	end = chunk3*(i+1)
+
+	if np.mean(array3[ini:end,1]) > (mean3+tol_mean3):
+		print "anomalia encontrada em torno de "+str(ini)+" media "+str(np.mean(array3[ini:end,1]))
+		anomalia3 = int(math.floor((ini+end)/2))
+		break
+	elif np.mean(array3[ini:end,1]) < (mean3-tol_mean3):
+		print "anomalia encontrada em torno de "+str(ini)+" media "+str(np.mean(array3[ini:end,1]))
+		anomalia3 = int(math.floor((ini+end)/2))
 		break
 
 #################################################################################
@@ -91,7 +146,13 @@ ax1.plot(array2[:,1])
 ax1.arrow(x_ini_2, y_ini_2, x_dist_2, y_dist_2, head_width=10, head_length=20, fc='r', ec='r')
 ax1.set_title("Serie 2")
 
+x_ini_3 = array3.shape[0]/2
+y_ini_3 = max(array3[:,1])+10
+x_dist_3 = anomalia3 - x_ini_3 - 50
+y_dist_3 = array3[anomalia3,1] - y_ini_3
+
 ax2.plot(array3[:,1])
+ax2.arrow(x_ini_3, y_ini_3, x_dist_3, y_dist_3, head_width=10, head_length=20, fc='r', ec='r')
 ax2.set_title("Serie 3")
 
 ax3.plot(array4[:,1])
