@@ -50,6 +50,7 @@ tol2 = 1.75*std2
 print "mean serie 2: "+str(mean2)
 print "std serie 2: "+str(std2)
 
+chunk2 = 0
 for i in range(0,array2.shape[0]):
 	if array2[i,1] > (mean2+std2+tol2):
 		print "anomalia encontrada em "+str(i)+" valor "+str(array2[i,1])
