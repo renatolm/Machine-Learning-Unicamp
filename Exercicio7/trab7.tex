@@ -1,3 +1,80 @@
+\documentclass{article}
+\usepackage{listings}             % Include the listings-package
+\usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+\usepackage{geometry}
+\usepackage{float}
+\usepackage[most]{tcolorbox} %apply colors on background
+    
+    \tcbset{	%background color configuration
+    frame code={}
+    center title,
+    left=0pt,
+    right=0pt,
+    top=0pt,
+    bottom=0pt,
+    colback=gray!30,
+    colframe=white,
+    width=\dimexpr\textwidth\relax,
+    enlarge left by=0mm,
+    boxsep=5pt,
+    arc=0pt,outer arc=0pt,
+    }
+
+\title{Exercício 7 - MO444 - Aprendizado de máquina e reconhecimento de padrões}
+\date{}
+\author{Renato Lopes Moura - 163050}
+    
+\geometry{verbose,tmargin=0.3in,bmargin=0.3in,lmargin=0.25in,rmargin=0.25in}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{9} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{9}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+\begin{document}
+
+\maketitle
+
+\section{Código}
+\subsection{Leitura de dados}
+%\lstinputlisting[language=Python]{ex5.py}
+\begin{tcolorbox}
+\begin{python}
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt 
@@ -16,7 +93,14 @@ array2 = dados2.values
 array3 = dados3.values
 array4 = dados4.values
 array5 = dados5.values
+\end{python}
+\end{tcolorbox}
 
+\newpage
+
+\subsection{Funções de apoio e métodos de detecção}
+\begin{tcolorbox}
+\begin{python}
 ###############################################################################
 #Funcao para calcular a media e desvio padrao de parte da serie
 def meanAndStd(series, n):
@@ -74,7 +158,11 @@ def method2(mean, tol_mean, array):
 			break
 
 	return anomalia
-
+\end{python}
+\end{tcolorbox}
+\newpage
+\begin{tcolorbox}
+\begin{python}
 #Metodo 3: calcula o log da serie e a media movel,
 # e entao procura pontos onde a media movel foge do intervalo de tolerancia
 def method3(array):
@@ -98,6 +186,14 @@ def method3(array):
 			break
 	return anomalia
 
+\end{python}
+\end{tcolorbox}
+
+\newpage
+
+\subsection{Aplicação dos métodos nas séries}
+\begin{tcolorbox}
+\begin{python}
 ################################################################################
 #Serie 1
 #Calcula a media e desvio padrao da serie 1 considerando os 25% primeiros dados
@@ -152,7 +248,11 @@ print "std serie 4: "+str(std4)
 anomalia4 = method3(array4)
 
 print "\n"
-
+\end{python}
+\end{tcolorbox}
+\newpage
+\begin{tcolorbox}
+\begin{python}
 ################################################################################
 #Serie 5
 #Calcula a media e desvio padrao da serie 4 considerando os 25% primeiros dados
@@ -168,7 +268,14 @@ anomalia5_2 = method2(mean5, tol_mean5, array5)
 anomalia5_3 = method3(array5)
 
 print "\n"
+\end{python}
+\end{tcolorbox}
 
+\newpage
+
+\subsection{Montagem dos gráficos}
+\begin{tcolorbox}
+\begin{python}
 #################################################################################
 #Graficos das series com as anomalias indicadas
 fig, ((ax0, ax1), (ax2, ax3), (ax4, ax5)) = plt.subplots(nrows=3, ncols=2, figsize=(12,12))
@@ -213,7 +320,13 @@ ax3.plot(array4[:,1])
 ax3.arrow(x_ini_4, y_ini_4, x_dist_4, y_dist_4, head_width=2, head_length=3, fc='r', ec='r')
 ax3.set_ylim([min(array4[:,1])-2,max(array4[:,1])+2])
 ax3.set_title("Serie 4")
+\end{python}
+\end{tcolorbox}
 
+\newpage
+
+\begin{tcolorbox}
+\begin{python}
 #Grafico serie 5
 x_ini_5_1 = array5.shape[0]/2
 y_ini_5_1 = max(array5[:,1])+10
@@ -240,5 +353,60 @@ ax4.set_title("Serie 5")
 fig.delaxes(ax5)
 
 plt.tight_layout()
-#plt.show()
-plt.savefig("graficos.png")
+plt.show()
+\end{python}
+\end{tcolorbox}
+
+\newpage
+
+\section{Outputs}
+\begin{tcolorbox}
+mean serie 1: 41.3726350546 \\
+std serie 1: 27.8368952363 \\
+anomalia encontrada em 3001 valor 159.259712824 \\
+\\
+
+mean serie 2: 41.3359316559 \\
+std serie 2: 27.8713761877 \\
+mean + tol serie 2: 43.4027282386 \\
+mean - tol serie 2: 39.2691350731 \\
+chunk size: 281 \\
+anomalia encontrada em torno de 2950 media 27.7896540829 \\
+\\
+
+mean serie 3: 41.1263863637 \\
+std serie 3: 27.5554321675 \\
+mean + tol serie 3: 43.1827056819 \\
+mean - tol serie 3: 39.0700670455 \\
+chunk size: 281 \\
+anomalia encontrada em torno de 2950 media 20.4934251525 \\
+\\
+
+mean serie 4: 0.436941410129 \\
+std serie 4: 2.92368096869 \\
+mean moving 0.0275421269945 \\
+std moving 0.0674673437938 \\
+anomalia encontrada em 2006 valor 20.0 \\
+\\
+
+mean serie 5: 0.0731622602537 \\
+std serie 5: 0.351624113632 \\
+anomalia encontrada em 180 valor 2.6516335011 \\
+chunk size: 981 \\
+anomalia encontrada em torno de 1471 media 0.0454836282884 \\
+mean moving 0.0274748000801 \\
+std moving 0.0603021741093 \\
+anomalia encontrada em 2914 valor 2.6075039486
+
+\end{tcolorbox}
+
+\newpage
+
+\section{Gráficos}
+\begin{figure}[H]
+  \centering
+    \includegraphics[scale=0.65]{graficos.png}
+    \caption{Graficos das series com anomalias indicadas.}
+\end{figure}
+
+\end{document}

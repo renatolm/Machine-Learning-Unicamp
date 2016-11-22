@@ -1,0 +1,37 @@
+mean serie 1: 41.3726350546
+std serie 1: 27.8368952363
+anomalia encontrada em 3001 valor 159.259712824
+
+
+mean serie 2: 41.3359316559
+std serie 2: 27.8713761877
+mean + tol serie 2: 43.4027282386
+mean - tol serie 2: 39.2691350731
+chunk size: 281
+anomalia encontrada em torno de 2950 media 27.7896540829
+
+
+mean serie 3: 41.1263863637
+std serie 3: 27.5554321675
+mean + tol serie 3: 43.1827056819
+mean - tol serie 3: 39.0700670455
+chunk size: 281
+anomalia encontrada em torno de 2950 media 20.4934251525
+
+
+mean serie 4: 0.436941410129
+std serie 4: 2.92368096869
+mean moving 0.0275421269945
+std moving 0.0674673437938
+anomalia encontrada em 2006 valor 20.0
+
+
+mean serie 5: 0.0731622602537
+std serie 5: 0.351624113632
+anomalia encontrada em 180 valor 2.6516335011
+chunk size: 981
+anomalia encontrada em torno de 1471 media 0.0454836282884
+mean moving 0.0274748000801
+std moving 0.0603021741093
+anomalia encontrada em 2914 valor 2.6075039486
+
